@@ -40,3 +40,6 @@ tests/load_snana_fits_reconstruct_indexes_constraints.sql
 
 # Emacs backup files
 **~
+
+# Sidrat Research Pitt-Google authentication
+/tests/secrets/*.json
