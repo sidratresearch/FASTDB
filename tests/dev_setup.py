@@ -309,29 +309,29 @@ def run_source_importer(
         broker_config["mongodb_collection_base"]
         for broker_config in config_yaml["brokers"].values()
     ]
+    print(f"Importing from MongoDB collections: {collections}")
 
-    subprocess.run(
-        [
-            "python",
-            "/code/src/services/source_importer.py",
-            "--collection",
-            " ".join(collections),
-            "-o",
-            base_processing_versions["object"],
-            "-p",
-            base_processing_versions["object-position"],
-            "-s",
-            base_processing_versions["source"],
-            "-f",
-            base_processing_versions["forcedsource"],
-        ]
-    )
+
+    subprocess.run([
+        "python",
+        "/fastdb/services/source_importer.py",
+        "--collection",
+        *collections,
+        "-o",
+        base_processing_versions["object"],
+        "-p",
+        base_processing_versions["object-position"],
+        "-s",
+        base_processing_versions["source"],
+        "-f",
+        base_processing_versions["forcedsource"],
+    ])
 
 
 @app.command()
 def dump_diaobjectids() -> None:
     """[After `run-source-importer`] Dump all known diaobjectids into a csv file."""
-    csv_path = "../test-scripts/diaobjectids.csv" # relative to the FASTDB repo, on the host machine
+    csv_path = "../test-scripts/diaobjectids.csv"  # relative to the FASTDB repo, on the host machine
     psql_command = "SELECT diaobjectid FROM diaobject;"
     subprocess.run(
         [
