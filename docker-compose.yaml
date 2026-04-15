@@ -199,6 +199,9 @@ services:
       - MONGODB_ALERT_READER_PASSWD=reader
       - MONGODB_ALERT_WRITER_USER=alertwriter
       - MONGODB_ALERT_WRITER_PASSWD=writer
+      # inherit the following variables from the invoking shell, and warn if they're unset
+      - GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT} 
+      - GOOGLE_APPLICATION_CREDENTIALS=/secrets/${GOOGLE_APPLICATION_CREDENTIALS_FILENAME}
     user: ${USERID:-0}:${GROUPID:-0}
     volumes:
       - type: bind
