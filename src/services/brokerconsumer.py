@@ -381,15 +381,15 @@ class BrokerConsumer:
 
     def create_connection( self, reset=False ):
         if reset:
-            self.countlogger.info( "*************** Resetting to start of broker kafka stream ***************" )
+            self.logger.info( "*************** Resetting to start of broker kafka stream ***************" )
         else:
-            self.countlogger.info( "*************** Connecting to kafka stream without reset  ***************" )
+            self.logger.info( "*************** Connecting to kafka stream without reset  ***************" )
 
         if self.schema_topic is not None:
             # Be paranoid that reset=True isn't really going to work, and put in a random group id so we'rea
             #  always reading from the beginning of the stream.
             barf = "".join( random.choices( 'abcdefghijlkmnopqrstuvwxyz', k=6 ) )
-            self.countlogger.info( "*************** Tryihng to get schema from schema topic   ***************" )
+            self.logger.info( "*************** Tryihng to get schema from schema topic   ***************" )
             countdown = 5
             consumer = self._actually_create_connection( self.server, f"{self.groupid}-schemapull-{barf}",
                                                          topics=[ self.schema_topic ],
@@ -417,7 +417,7 @@ class BrokerConsumer:
                 self.schema = fastavro.schema.parse_schema( simplejson.loads( key ) )
             else:
                 raise RuntimeError( "ROB FIGURE OUT WHAT TO DO HERE" )
-            self.countlogger.info( f"Parsed schema from {self.schema_topic}" )
+            self.logger.info( f"Parsed schema from {self.schema_topic}" )
 
         self.consumer = self._actually_create_connection( self.server, self.groupid,
                                                           topics=self.topics,
@@ -429,7 +429,7 @@ class BrokerConsumer:
                                                           logger=self.logger,
                                                           countlogger=self.countlogger )
 
-        self.countlogger.info( "**************** Consumer connection opened *****************" )
+        self.logger.info( "**************** Consumer connection opened *****************" )
 
     def close_connection( self ):
         try:
@@ -1137,6 +1137,7 @@ class PittGoogleConsumer(BrokerConsumer):
         }
 
         self.logger.debug( "Returning from handle_message" )
+        self.logger.info(f"Handled message for diaObject {parsedalert['diaObject']['diaObjectId']}")
         return pittgoogle.pubsub.Response(result=message, ack=True)
 
 
@@ -1204,12 +1205,12 @@ class PittGoogleConsumer(BrokerConsumer):
                     ),
                 )
 
-                self.countlogger.info( f"Launching a pittgoogle stream, topic={self.topic}..." )
-
+                self.logger.info( f"Launching a pittgoogle stream, topic={self.topic}..." )
+                
                 result = self.consumer.stream( pipe=self.pipe, heartbeat=60,
                                                   max_runtime=restart_time, max_nmsgs=max_msgs )
                 currenttotconsumed += result['totprocessed']
-                self.countlogger.info( f"...pittgoogle stream consumed {result['totprocessed']} messages; "
+                self.logger.info( f"...pittgoogle stream consumed {result['totprocessed']} messages; "
                                        f"this call to poll consumed {currenttotconsumed} messages, "
                                        f"overall {self.tot_n_messages_consumed} messages." )
                 if result[ "status" ] == "die":
