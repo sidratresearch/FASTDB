@@ -1,33 +1,33 @@
-import sys
-import os
-import io
-import re
-import random
-import collections
-import time
-import yaml
-import datetime
-import traceback
-import pathlib
-import urllib
-import logging
 import argparse
+import collections
+import datetime
+import io
+import logging
 import multiprocessing
+import os
+import pathlib
+import random
+import re
 import signal
-import simplejson
+import sys
+import time
+import traceback
+import urllib
 
-import numpy as np
 import confluent_kafka
-import fastavro
-import pymongo
-
 import db
+import fastavro
+import numpy as np
+import pymongo
+import simplejson
+import yaml
 from kafka_consumer import KafkaConsumer
 
 # Default location of BrokerMessage schema
 _default_brokermessage_schemafile = "/fastdb/share/avsc/fastdb.v10_0_0.BrokerMessage.avsc"
 
 from concurrent.futures import ThreadPoolExecutor  # for pittgoogle
+
 import pittgoogle
 
 _rundir = pathlib.Path(__file__).parent
