@@ -1,0 +1,45 @@
+brokers:
+  fink-uniform:
+      class: FinkConsumer
+      server: kafka-lsst.fink-broker.org:24499
+      groupid: tai_sidratresearch
+      topics: [ 'fink_uniform_sample_lsst' ]
+      schemaless: False
+      schema_in_key: True
+      updatetopics: false
+      brokername_for_alerts: "LaunchedFink"
+      mongodb_collection_base: fastdb_fink_uniform_sample_topic
+      cache_alerts: true
+      loggername: FINK-UNIFORM
+      loggername_prefix: ""
+      batch_size: 10
+      consume_timeout: 5
+      nomsg_sleeptime: 1
+      batch_size: 10
+      extraconfig: null
+      extraconfigjson: null
+      pollkwargs:
+        reset: true
+        restart_time_min: 0.1666667
+        notopic_sleeptime: 2
+        max_restarts: null
+
+  pitt-google-uniform_sample:
+    class: PittGoogleConsumer
+    groupid: fastdb-broker-consumer-uniform
+    schemafile: /fastdb/share/avsc/lsst.v10_0.alert.avsc
+    schemaless: true
+    mongodb_collection_base: pittgoogle_uniform
+    brokername_for_alerts: "Pitt-Google"
+    cache_alerts: true # not present in NSERC
+    loggername: "PITTGOOGLE-UNIFORM"
+    loggername_prefix: ""
+    consume_timeout: 1.1 # 5 in nserc
+    batch_size: 10 # 1000 in nserc
+    survey: lsst # important!
+    topic_name: alerts # important! "alerts" in nserc, but that doesn't seem to have anything coming through right now
+    max_workers: 2
+    pollkwargs:
+      restart_time_min: 0.16667 # 30 in nserc
+      max_restarts: null
+      filter_file: tests/services/uniform_sample.js
