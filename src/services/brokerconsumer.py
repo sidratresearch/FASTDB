@@ -1162,6 +1162,17 @@ class PittGoogleConsumer(BrokerConsumer):
 
 
     def poll(self, reset=None, restart_time=None, max_restarts=None, max_msgs=None, **kwargs ):
+        if "filter_file" in kwargs:
+            filter_path = pathlib.Path(kwargs["filter_file"])
+            filter_text = filter_path.read_text()
+            del kwargs["filter_file"]
+
+            current_version, needed_version = pittgoogle.__version__ , "0.3.20"
+            self.logger.info(f"Running with pittgoogle client version {current_version}")
+            if (current_version<needed_version):
+                raise ValueError(f"To use filters, pittgoogle-client must be version {needed_version}, but installed version is {current_version}.")
+        else:
+            filter_text = None
         if len(kwargs) > 0:
             raise RuntimeError( f"Parameters unknown to PittGoogleConsumer.poll: {list(kwargs.keys())}" )
         if reset is not None:
@@ -1182,7 +1193,11 @@ class PittGoogleConsumer(BrokerConsumer):
                 self.topic = subscription.topic.name
 
                 # if the subscription doesn't already exist, this will create one
-                subscription.touch()
+
+                if filter_text is None:
+                    subscription.touch()
+                else:
+                    subscription.touch(smt_javascript_udf=filter_text)
 
                 self.consumer = pittgoogle.pubsub.Consumer(
                     subscription=subscription,
@@ -1190,7 +1205,7 @@ class PittGoogleConsumer(BrokerConsumer):
                     batch_callback=self.handle_message_batch,
                     batch_maxn=self.batch_size,
                     batch_max_wait_between_messages=self.consume_timeout,
-                    logger=self.countlogger,
+                    # logger=self.countlogger, # removed in pittgoogle version bump?
                     executor=ThreadPoolExecutor(
                         max_workers=self._max_workers,
                         initializer=self.worker_init,
@@ -1207,8 +1222,8 @@ class PittGoogleConsumer(BrokerConsumer):
 
                 self.logger.info( f"Launching a pittgoogle stream, topic={self.topic}..." )
                 
-                result = self.consumer.stream( pipe=self.pipe, heartbeat=60,
-                                                  max_runtime=restart_time, max_nmsgs=max_msgs )
+                result = self.consumer.stream()# pipe=self.pipe, heartbeat=60,
+                                               #   max_runtime=restart_time, max_nmsgs=max_msgs )
                 currenttotconsumed += result['totprocessed']
                 self.logger.info( f"...pittgoogle stream consumed {result['totprocessed']} messages; "
                                        f"this call to poll consumed {currenttotconsumed} messages, "
