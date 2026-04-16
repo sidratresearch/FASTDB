@@ -1137,7 +1137,7 @@ class PittGoogleConsumer(BrokerConsumer):
         }
 
         self.logger.debug( "Returning from handle_message" )
-        self.logger.info(f"Handled message for diaObject {parsedalert['diaObject']['diaObjectId']}")
+        self.logger.info(f"Handled a message")
         return pittgoogle.pubsub.Response(result=message, ack=True)
 
 
