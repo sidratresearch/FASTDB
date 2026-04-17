@@ -241,7 +241,7 @@ def setup() -> None:
     user.insert()
     populate_processing_versions()
     enable_psql_access()
-    subprocess.run("pip install --upgrade pittgoogle-client>=0.3.20", shell=True)
+    subprocess.run("pip install --upgrade 'pittgoogle-client>=0.3.20'", shell=True)
 
     print("\n\nSuccessfully set up FASTDB for use.\n")
 

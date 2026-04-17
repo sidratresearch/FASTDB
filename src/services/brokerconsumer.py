@@ -1137,14 +1137,14 @@ class PittGoogleConsumer(BrokerConsumer):
         }
 
         self.logger.debug( "Returning from handle_message" )
-        self.logger.info(f"Handled a message")
+        # self.logger.info(f"Handled a message")
         return pittgoogle.pubsub.Response(result=message, ack=True)
 
 
     def handle_message_batch(self, messagebatch: list) -> None:
         """Callback that will process a batch of messages. This will run in the main thread."""
 
-        self.logger.info( f"In handle_message_batch, received {len(messagebatch)} messages" )
+        # self.logger.info( f"In handle_message_batch, received {len(messagebatch)} messages" )
         t0 = time.perf_counter()
         if self.no_wrangle:
             wrangled = {}

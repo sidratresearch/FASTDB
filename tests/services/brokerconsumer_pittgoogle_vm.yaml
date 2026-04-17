@@ -1,0 +1,58 @@
+brokers:
+  pitt-google-alerts:
+    class: PittGoogleConsumer
+    groupid: fastdb-broker-consumer-alerts-vm
+    schemafile: /fastdb/share/avsc/lsst.v10_0.alert.avsc
+    schemaless: true
+    mongodb_collection_base: pittgoogle_alerts
+    brokername_for_alerts: "Pitt-Google"
+    cache_alerts: true # not present in NSERC
+    loggername: "PITTGOOGLE-ALERTS"
+    loggername_prefix: ""
+    consume_timeout: 1.1 # 5 in nserc
+    batch_size: 10 # 1000 in nserc
+    survey: lsst # important!
+    topic_name: alerts # important! "alerts" in nserc, but that doesn't seem to have anything coming through right now
+    max_workers: 2
+    pollkwargs:
+      restart_time_min: 0.16667 # 30 in nserc
+      max_restarts: null
+
+  pitt-google-loop:
+    class: PittGoogleConsumer
+    groupid: fastdb-broker-consumer-loop-vm
+    schemafile: /fastdb/share/avsc/lsst.v10_0.alert.avsc
+    schemaless: true
+    mongodb_collection_base: pittgoogle_loop
+    brokername_for_alerts: "Pitt-Google"
+    cache_alerts: true # not present in NSERC
+    loggername: "PITTGOOGLE-LOOP"
+    loggername_prefix: ""
+    consume_timeout: 1.1 # 5 in nserc
+    batch_size: 10 # 1000 in nserc
+    survey: lsst # important!
+    topic_name: loop # important! "alerts" in nserc, but that doesn't seem to have anything coming through right now
+    max_workers: 2
+    pollkwargs:
+      restart_time_min: 0.16667 # 30 in nserc
+      max_restarts: null
+
+  pitt-google-uniform_sample:
+    class: PittGoogleConsumer
+    groupid: fastdb-broker-consumer-uniform-vm
+    schemafile: /fastdb/share/avsc/lsst.v10_0.alert.avsc
+    schemaless: true
+    mongodb_collection_base: pittgoogle_uniform
+    brokername_for_alerts: "Pitt-Google"
+    cache_alerts: true # not present in NSERC
+    loggername: "PITTGOOGLE-UNIFORM"
+    loggername_prefix: ""
+    consume_timeout: 1.1 # 5 in nserc
+    batch_size: 10 # 1000 in nserc
+    survey: lsst # important!
+    topic_name: alerts # important! "alerts" in nserc, but that doesn't seem to have anything coming through right now
+    max_workers: 2
+    pollkwargs:
+      restart_time_min: 0.16667 # 30 in nserc
+      max_restarts: null
+      filter_file: tests/services/uniform_sample.js
